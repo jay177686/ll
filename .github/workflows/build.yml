@@ -1,4 +1,4 @@
-name: Build APK (STABLE SIMPLE)
+name: Build APK (Stable Final)
 
 on:
   push:
@@ -10,14 +10,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repo
+    # 1️⃣ 拉代码
+    - name: Checkout
       uses: actions/checkout@v4
 
+    # 2️⃣ Python环境
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
 
+    # 3️⃣ 系统依赖
     - name: Install system deps
       run: |
         sudo apt-get update
@@ -26,16 +29,25 @@ jobs:
           python3-pip build-essential \
           libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
 
+    # 4️⃣ 安装 buildozer（核心）
     - name: Install Buildozer
       run: |
         pip install --upgrade pip
         pip install buildozer cython kivy
 
-    # 🚨 关键：只做一件事
+    # 5️⃣ 防止旧缓存污染（非常关键）
+    - name: Clean old build
+      run: |
+        rm -rf .buildozer
+        rm -rf ~/.buildozer
+
+    # 6️⃣ 🚀 构建 APK（唯一核心步骤）
     - name: Build APK
       run: |
+        export DEBIAN_FRONTEND=noninteractive
         buildozer -v android debug
 
+    # 7️⃣ 上传 APK
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
