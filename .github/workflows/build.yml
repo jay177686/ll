@@ -10,10 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-    # ⚠️ 关键：必须用正确 Python
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
@@ -32,10 +30,10 @@ jobs:
         pip install --upgrade pip
         pip install buildozer cython kivy
 
-    # 🚀 最关键：直接 build，不装 SDK，不搞 sdkmanager
+    # 🚨 关键：不要 SDK / 不要 sdkmanager / 不要 37
     - name: Build APK
       run: |
-        buildozer -v android debug
+        buildozer android debug
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
