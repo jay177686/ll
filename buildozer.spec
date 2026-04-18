@@ -1,7 +1,7 @@
 [app]
-title = TestApp
-package.name = testapp
-package.domain = org.test
+title = DemoApp
+package.name = demoapp
+package.domain = org.demo
 
 source.dir = .
 source.include_exts = py
